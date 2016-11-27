@@ -125,6 +125,8 @@ def main():
             # Extract all of the rows with the requested category
             extractData(csvfile, data)
 
+            csvfile.close()
+
     except IOError:
         print("The .csv file doesnt exist")
 
@@ -132,12 +134,15 @@ def main():
     try:
         fh = open(outputFile, 'w')
         fh.write(json.dumps(data, indent=4))
+        fh.close()
     except IOError:
         print("There has been an error while trying to write to data.json")
 
     # Trys to import the data from the .json file into a list
     try:
-        newData=json.loads(open(outputFile,'r').read())
+        fh=open(outputFile,'r')
+        newData=json.loads(fh.read())
+        fh.close()
         print(newData)
     except IOError:
         print("There has been an error while trying to read from data.json")
