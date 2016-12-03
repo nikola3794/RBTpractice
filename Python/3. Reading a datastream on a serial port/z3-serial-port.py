@@ -1,6 +1,8 @@
+'''
 
-def emptyMsg():
-    message = {
+'''
+def emptyCmd():
+    cmd = {
             "stx" : False,
             "cmd" : -1,
             "len":-1,
@@ -8,51 +10,54 @@ def emptyMsg():
             "crc" : -1
         }
 
-    return message
+    return cmd
 
-def process(data,message):
-    for b in data:
+def process(buffer, cmd):
+    for b in buffer:
 
-        if b == 2 and message["stx"] == False:
-            message["stx"] = True
+        if b == 2 and cmd["stx"] == False:
+            cmd["stx"] = True
             continue
 
-        elif message["stx"] == True and message["cmd"] == -1:
-            message["cmd"] = b
-            message["crc"] = 2 ^ b
+        elif cmd["stx"] == True and cmd["cmd"] == -1:
+            cmd["cmd"] = b
+            cmd["crc"] = 2 ^ b
             continue
 
-        elif message["cmd"] != -1 and message["len"] == -1:
-            message["len"] = b
-            message["crc"] ^= b
+        elif cmd["cmd"] != -1 and cmd["len"] == -1:
+            cmd["len"] = b
+            cmd["crc"] ^= b
             continue
 
-        elif message["len"] != -1 and len(message["data"]) < message["len"]:
-            message["data"].append(b)
-            message["crc"] ^= b
+        elif cmd["len"] != -1 and len(cmd["data"]) < cmd["len"]:
+            cmd["data"].append(b)
+            cmd["crc"] ^= b
             continue
 
-        elif len(message["data"]) == message["len"]:
-            if message["crc"] == b:
+        elif len(cmd["data"]) == cmd["len"]:
+            if cmd["crc"] == b:
                 msg=''
-                for el in message["data"]:
+                for el in cmd["data"]:
                     msg += str(el) + ' '
 
-                print("Command", message["cmd"], "found -> printing command data: ")
-                print(msg,"(Message length:",message["len"],")")
+                print("Command", cmd["cmd"], "found -> printing command data: ")
+                print(msg,"(Message length:", cmd["len"], ")")
+                print()
 
             else:
                 print("There has been an error while trying to recieve a message.")
+                print()
 
-            message["stx"] = False
-            message["cmd"] = -1
-            message["len"] = -1
-            message["data"] = bytearray()
-            message["crc"] = -1
+            cmd["stx"] = False
+            cmd["cmd"] = -1
+            cmd["len"] = -1
+            cmd["data"] = bytearray()
+            cmd["crc"] = -1
 
 
 def main():
 
+    # Trys to read the message from the binary file
     try:
         fh=open('message.bin','rb')
 
@@ -60,16 +65,16 @@ def main():
         print(e)
 
     else:
-        data = fh.read(9)
+        buffer = fh.read(5) # Load the buffer with 5 bytes
+ 
+        cmd = emptyCmd() # Generate an empty 
 
-        message = emptyMsg()
+        while buffer != b'':
+            process(buffer, cmd)
 
-        while data != b'':
-            process(data, message)
+            buffer = fh.read(5)
 
-            data = fh.read(9)
-
-        print("Terminated with message",message)
+        print("Terminated with message at state:",cmd)
         fh.close()
 
 
