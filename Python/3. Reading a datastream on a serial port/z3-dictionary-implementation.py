@@ -16,7 +16,7 @@ def emptyCmd():
             "cmd": -1,
             "len": -1,
             "data": bytearray(),
-            "crc": -1
+            "crc": -1,
         }
 
     return cmd
@@ -97,7 +97,7 @@ def main():
         print(e)
 
     else:
-        buffer = fh.read(5)  # Load the buffer with 5 bytes
+        buffer = fh.read()  # Load the buffer with 5 bytes
  
         cmd = emptyCmd()  # Generate an empty command
 
