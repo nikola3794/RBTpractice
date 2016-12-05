@@ -9,7 +9,7 @@ Generates a message and outputs it.
 '''
 def generateMessage():
     msg = bytearray()  # Create an empty message
-    msg = msg + b'2578eguovu034hbh8w4vu1cj923'  # Add random bytes to the message
+    # msg = msg + b'2578eguovu034hbh8w4vu1cj923'  # Add random bytes to the message
 
     # Add 4 valid commands surrounded with random bytes to the message
     for j in range(4):
