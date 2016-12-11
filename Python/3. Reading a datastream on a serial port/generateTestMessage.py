@@ -53,13 +53,13 @@ def generateMessage():
 
         msg += b'67gfd'  # Add random bytes to the message
 
-    # Add 1 valid command surrounded with random bytes to the message
-    for j in range(1):
+    # Adds 2 valid commands
+    for j in range(2):
 
         # Start of a command
         msg.append(STX)  # STX byte
         msg.append(random.randint(0, 127))  # CMD
-        l = 5
+        l = 5 + 2*j
         msg.append(l)  # DataLen
 
         for el in range(l):
@@ -71,8 +71,6 @@ def generateMessage():
             crc ^= i
         msg.append(crc)
         # End of a command
-
-        msg += b'lkp'  # Add random bytes to the message
 
     # Add 1 half-complete command surrounded with random bytes to the message
     # Start of a command
