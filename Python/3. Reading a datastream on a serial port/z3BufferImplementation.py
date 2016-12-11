@@ -81,7 +81,8 @@ def process(byte, buffer):
                 print("Error in transmission [CRC check not valid]")
                 print()
                 buffer.clear()
-
+        
+        # The command isn't at it's end yet
         else:
             buffer.append(byte)
 
